@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
         }
 
         SetupScoreText();
+        SetupAudio();
     }
 
     #endregion
@@ -41,6 +42,10 @@ public class GameManager : MonoBehaviour
     Vector2 direction;
     Vector2 force;
     float distance;
+
+    // === AUDIO ===
+    private AudioSource audioSource;
+    private AudioClip aciertoClip;
 
     void SetupScoreText()
     {
@@ -72,6 +77,21 @@ public class GameManager : MonoBehaviour
         scoreText.fontSize = 36;
         scoreText.color = Color.blue;
         scoreText.text = "Puntaje: 0";
+    }
+
+    void SetupAudio()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+
+        // Carga el audio desde Resources/Audio/acierto.wav
+        aciertoClip = Resources.Load<AudioClip>("Audio/acierto");
+
+        if (aciertoClip == null)
+        {
+            Debug.LogWarning("No se pudo cargar el audio 'acierto.wav' desde Resources/Audio/");
+        }
+
+        audioSource.playOnAwake = false;
     }
 
     void Start()
@@ -130,6 +150,13 @@ public class GameManager : MonoBehaviour
         {
             scoreText.text = "Puntaje: " + score;
         }
+
+        // Reproduce el sonido de acierto
+        if (audioSource != null && aciertoClip != null)
+        {
+            audioSource.PlayOneShot(aciertoClip);
+        }
+
         Debug.Log("Puntaje total: " + score);
     }
 }
